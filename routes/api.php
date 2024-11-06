@@ -9,7 +9,13 @@ Route::prefix('v1')->group(function () {
         return $request->user();
     })->middleware('auth:sanctum');
 
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+    Route::middleware('web')->group(function () {
+        Route::post('/login', [AuthController::class, 'login'])
+            ->name('login');
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/user', [AuthController::class, 'user']);
+    });
 });
